@@ -20,12 +20,12 @@ const SignUp = () => {
             <p className='font-inter font-extralight text-xl text-gray-800'>Welcome! to Eshop</p>
           </div>
           <div className='space-y-5 mb-8'>
-            <CustomInput className='' placeholder='First name' />
+            <CustomInput className='' placeholder='Company name' />
             <CustomInput className='' placeholder='Last name' />
-            <CustomInput className='' placeholder='Email' />
+            <CustomInput className='' placeholder='Company Email' />
             <CustomInput placeholder='Password' />
           </div>
-          <CustomButton to={'/'}>Login</CustomButton>
+          <CustomButton to={'/'}>Register</CustomButton>
           <div className='pt-4 text-center'>
             <p className='font-inter font-medium text-gray-800'>Already have an account? <Link to={'/'} className='text-blue-500'>Login</Link></p>
           </div>

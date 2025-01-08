@@ -11,7 +11,7 @@ const Authenticated = () => {
       <div className='ml-64 mx-auto flex-1 overflow-y-auto w-auto h-auto'>
         <NavBar />
         <Routes>
-          <Route path='/overview' element={<Home />} />
+          <Route path='/' element={<Home />} />
           <Route path='/garage-connect' element={<GarageConnectAdmin />} />
           <Route path='/settings' element={<Settings />} />
         </Routes>

@@ -6,9 +6,10 @@ interface LinkButtonProps {
   to?: any;
   className?: string;
   children: React.ReactNode;
+  onClick?: React.MouseEventHandler<HTMLAnchorElement> | undefined;
 }
 
-const CustomButton: React.FC<LinkButtonProps> = ({ to, className = '', children, ...props }) => {
+const CustomButton: React.FC<LinkButtonProps> = ({ to, className = '', children, onClick, ...props }) => {
 
   
     return (
@@ -16,6 +17,7 @@ const CustomButton: React.FC<LinkButtonProps> = ({ to, className = '', children,
         to={to}
         className={`bg-blue-500 font-league text-lg rounded-md w-full p-2 text-white text-center block ${className}`}
         {...props}
+        onClick={onClick}
       >
         {children}
       </Link>

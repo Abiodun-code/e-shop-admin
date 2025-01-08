@@ -8,7 +8,7 @@ export const SideList = [
   {
     id: 1,
     name: 'Overview',
-    path: '/overview',
+    path: '/',
     icon: MdOutlineDashboard,
   },
   {

@@ -5,8 +5,15 @@ import git from "../../assets/git.jpg"
 import { LuLogOut } from 'react-icons/lu'
 import { SideList } from './sideList'
 import { truncateText } from '../../utils/TruncateText'
+import { useDispatch } from 'react-redux'
+import { signOutUser } from '../../services/store/not-authenticated/sign-in/signInThunk'
 
 const SideNav = () => {
+  const dispatch = useDispatch();
+
+  const handleLogout = () => {
+    dispatch<any>(signOutUser());
+  };
   return (
     <div className='bg-white fixed w-64 hidden xl:flex lg:flex h-screen border-r-gray-400 border-r'>
       <div className='w-full px-3 pt-5'>
@@ -31,7 +38,7 @@ const SideNav = () => {
             <p className='font-league font-light text-sm'>{truncateText('eshopAdmin@gmail.com', 15)}</p>
           </div>
         </div>
-        <Link to={'/'} className='xl:text-lg lg:text-sm cursor-pointer pr-7 lg:pr-5'>
+        <Link onClick={handleLogout} className='xl:text-lg lg:text-sm cursor-pointer pr-7 lg:pr-5'>
           <LuLogOut />
         </Link>
       </div>

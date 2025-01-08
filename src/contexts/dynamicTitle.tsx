@@ -16,12 +16,12 @@ const DynamicTitleProvider = ({ children }: dynamicChild) => {
 
   // This functionality is for the navBar to change title dynamically and also the document title we also change
   const location = useLocation();
-  const [title, setTitle] = useState('overview');
+  const [title, setTitle] = useState('');
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
   useEffect(() => {
     const pageTitles = {
-      '/overview': 'Overview',
+      '/': 'Overview',
       '/settings': 'Settings',
       '/garage-connect': 'Garage connect admin',
     };

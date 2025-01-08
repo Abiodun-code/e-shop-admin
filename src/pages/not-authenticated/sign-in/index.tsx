@@ -1,13 +1,36 @@
-import React, { useEffect } from 'react'
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import gc from "../../../assets/react.svg"
 import { CustomButton, CustomInput } from '../../../shared/index'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../services/store/store'
+import { signInUser } from '../../../services/store/not-authenticated/sign-in/signInThunk'
 
 const SignIn = () => {
 
   useEffect(() => {
     document.title = 'Login - E-shop Admin'
   }, [])
+
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const dispatch = useDispatch()
+
+  const {error, isLoading} = useSelector((state: RootState)=>state.signIn)
+
+
+  const handleSignIn = ()=>{
+    if (!email) {
+      alert('Email is required')
+    }
+    if (!password) {
+      alert('Password is required')
+    }
+    dispatch<any>(signInUser({email:email, password:password}))
+  }
+
 
   return (
     <div className='h-screen'>
@@ -21,12 +44,12 @@ const SignIn = () => {
             <p className='font-inter font-extralight text-xl text-gray-800'>Welcome back! Please enter your details</p>
           </div>
           <div className='space-y-5 mb-8'>
-            <CustomInput className='' placeholder='Email' />
-            <CustomInput placeholder='Password' />
+            <CustomInput placeholder='Email' onChange={(e)=>setEmail(e.target.value)} value={email} type='email' />
+            <CustomInput placeholder='Password' onChange={(e)=>setPassword(e.target.value)} value={password} type='password' />
             <CustomButton className='bg-white text-blue-400 font-inter font-medium text-md text-right'>Forget password</CustomButton>
           </div>
           <div>
-            <CustomButton to={'/overview'}>Login</CustomButton>
+            <CustomButton onClick={handleSignIn}>Login</CustomButton>
           </div>
           <div className='pt-4 text-center'>
             <p className='font-inter font-medium text-gray-800'>Don't have an account? <Link to={'/register'} className='text-blue-500'>Sign up now</Link></p>
