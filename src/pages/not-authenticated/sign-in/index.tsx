@@ -6,6 +6,7 @@ import { CustomButton, CustomInput } from '../../../shared/index'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '../../../services/store/store'
 import { signInUser } from '../../../services/store/not-authenticated/sign-in/signInThunk'
+import { toast } from 'react-toastify';
 
 const SignIn = () => {
 
@@ -18,19 +19,26 @@ const SignIn = () => {
 
   const dispatch = useDispatch()
 
-  const {error, isLoading} = useSelector((state: RootState)=>state.signIn)
-
+  const { error, isLoading, success } = useSelector < RootState>((state)=>state.signIn)
 
   const handleSignIn = ()=>{
     if (!email) {
-      alert('Email is required')
+      toast.error('Email is required')
     }
     if (!password) {
-      alert('Password is required')
+      toast.error('Password is required')
     }
     dispatch<any>(signInUser({email:email, password:password}))
   }
 
+  useEffect(() => {
+    if (error) {
+      toast.error(error); // Display backend error message
+    }
+    if (success) {
+      toast.success('Login successful 👋');
+    }
+  }, [error, success]);
 
   return (
     <div className='h-screen'>
@@ -49,7 +57,7 @@ const SignIn = () => {
             <CustomButton className='bg-white text-blue-400 font-inter font-medium text-md text-right'>Forget password</CustomButton>
           </div>
           <div>
-            <CustomButton onClick={handleSignIn}>Login</CustomButton>
+            <CustomButton onClick={handleSignIn}>{isLoading ? 'Loading...' : 'Sign In'}</CustomButton>
           </div>
           <div className='pt-4 text-center'>
             <p className='font-inter font-medium text-gray-800'>Don't have an account? <Link to={'/register'} className='text-blue-500'>Sign up now</Link></p>

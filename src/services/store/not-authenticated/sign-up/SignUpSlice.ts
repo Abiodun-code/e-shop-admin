@@ -1,9 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit"
-import { signUpUser } from "./SignUpThunk"
+import { resendOtp, signUpUser, verifyOtp } from "./SignUpThunk"
 
 const initialState = {
   error: false,
-  message: "",
+  success: false,
   isLoading: false
 }
 
@@ -16,14 +16,44 @@ const signUpSlice = createSlice({
     .addCase(signUpUser.pending, (state)=>{
       state.isLoading = true
       state.error = false
+      state.success = false
     })
-    .addCase(signUpUser.fulfilled, (state, action)=>{
+    .addCase(signUpUser.fulfilled, (state)=>{
       state.isLoading = false
-      state.message = action.payload
+      state.success = true
     })
     .addCase(signUpUser.rejected, (state)=>{
       state.isLoading = false
       state.error = true
+      state.success = false
+    })
+    .addCase(verifyOtp.pending, (state)=>{
+      state.isLoading = true
+      state.error = false
+      state.success = false
+    })
+    .addCase(verifyOtp.fulfilled, (state)=>{
+      state.isLoading = false
+      state.success = true
+    })
+    .addCase(verifyOtp.rejected, (state)=>{
+      state.isLoading = false
+      state.error = true
+      state.success = false
+    })
+    .addCase(resendOtp.pending, (state)=>{
+      state.isLoading = true
+      state.error = false
+      state.success = false
+    })
+    .addCase(resendOtp.fulfilled, (state)=>{
+      state.isLoading = false
+      state.success = true
+    })
+    .addCase(resendOtp.rejected, (state)=>{
+      state.isLoading = false
+      state.error = true
+      state.success = false
     })
   }
 })

@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { apiClient } from "../../../api/apiClient";
 import { clearAuth, setAuth } from "./signInSlice";
+import { toast } from "react-toastify";
 
 export const signInUser = createAsyncThunk("auth/signIn", async({email, password}:{email:string, password:string}, {rejectWithValue, dispatch})=>{
   try {
@@ -11,7 +12,8 @@ export const signInUser = createAsyncThunk("auth/signIn", async({email, password
 
     // Check if the user is an admin
     if (role !== 'ROLE_ADMIN') {
-      return alert('Only admins are allowed to sign in.');
+      toast.error('Only admins are allowed to sign in.');
+      return rejectWithValue({ message: 'Access denied. Admins only.' });
     }
 
     await localStorage.setItem("accessToken", accessToken)
@@ -21,9 +23,10 @@ export const signInUser = createAsyncThunk("auth/signIn", async({email, password
 
     return response.data;
   } catch (error) {
-    if(error instanceof Error){
-      return rejectWithValue(error.message)
+    if(error.response && error.response.data){
+      return rejectWithValue(error.response.data)
     }
+    return rejectWithValue({ message: 'Something went wrong' }); // fallback message
   }
 })
 
@@ -35,8 +38,9 @@ export const signOutUser = createAsyncThunk('auth/signOut', async (_, { dispatch
     await localStorage.removeItem("user")
 
     // Reset Redux state
-
     dispatch(clearAuth());
+
+    return toast.success('Sign out successful');
   } catch (error) {
     console.error('Error during logout:', error);
     throw error;

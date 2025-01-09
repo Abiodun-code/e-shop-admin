@@ -6,56 +6,64 @@ import { RootState, store } from './services/store/store';
 import DynamicTitleProvider from './contexts/dynamicTitle';
 import NotificationProvider from './contexts/notificationContext';
 import Authenticated from './routes';
-import { SignIn, SignUp } from './pages';
+import { SignIn, SignUp, VerifyOtp } from './pages';
+import { Slide, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const App = () => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
-  const loginToken = useSelector<RootState, string | null>((state) => state?.signIn.accessToken);
+  const loginToken = useSelector<RootState, string | null>((state) => state.signIn.accessToken);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(!!localStorage.getItem("accessToken"));
 
   useEffect(() => {
-    const checkAuthStatus = () => {
-      try {
-        const token = localStorage.getItem("accessToken");
-        setIsAuthenticated(!!token);
-      } catch (error) {
-        console.error("Error checking auth status:", error);
-        setIsAuthenticated(false);
-      }
-    };
-    checkAuthStatus();
-  }, []);
-
-  useEffect(() => {
-    if (loginToken) setIsAuthenticated(true);
-    else setIsAuthenticated(false);
+    if (loginToken) {
+      localStorage.setItem("accessToken", loginToken);
+      setIsAuthenticated(true);
+    } else {
+      const token = localStorage.getItem("accessToken");
+      setIsAuthenticated(!!token);
+    }
   }, [loginToken]);
 
   if (isAuthenticated === null) return null; // Prevent rendering before auth status is determined
 
   return (
-    <NotificationProvider>
-      <DynamicTitleProvider>
-        <Routes>
+    <div className=''>
+      <Routes>
 
-          {isAuthenticated ? (
-            <Route path="/*" element={<Authenticated />} />
-          ): (
-            <>
-              <Route path="/" element={<SignIn />} />
-              <Route path="/register" element={<SignUp />} />
-            </>
-          )}
-            
-            
-        </Routes>
-      </DynamicTitleProvider>
-    </NotificationProvider>
+        {isAuthenticated ? (
+          <Route path="/*" element={<Authenticated />} />
+        ) : (
+          <>
+            <Route path="/" element={<SignIn />} />
+            <Route path="/register" element={<SignUp />} />
+            <Route path="/verify-otp" element={<VerifyOtp />} />
+          </>
+        )}
+      </Routes>
+      <ToastContainer
+        position='top-center'
+        transition={Slide}
+        autoClose={1000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        toastStyle={{ fontSize: 16, fontFamily: 'inherit' }}
+      />
+    </div>
   );
 };
 
 const AppWrapper = () => (
   <Provider store={store}>
-    <App />
+    <NotificationProvider>
+      <DynamicTitleProvider>
+        <App />
+      </DynamicTitleProvider>
+    </NotificationProvider>
   </Provider>
 );
 

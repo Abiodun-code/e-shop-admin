@@ -1,13 +1,61 @@
-import React, { useEffect } from 'react'
-import { Link } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import gc from "../../../assets/react.svg"
 import { CustomButton, CustomInput } from '../../../shared/index'
+import { useDispatch, useSelector } from 'react-redux'
+import { RootState } from '../../../services/store/store'
+import { toast } from 'react-toastify'
+import { signUpUser } from '../../../services/store/not-authenticated/sign-up/SignUpThunk'
+import { signInUser } from '../../../services/store/not-authenticated/sign-in/signInThunk'
 
 const SignUp = () => {
   useEffect(() => {
     document.title = 'Register - E-shop Admin'
   }, [])
 
+  const [ownerName, setOwnerName] = useState('')
+  const [companyName, setCompanyName] = useState('')
+  const [companyEmail, setCompanyEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const navigate = useNavigate();
+
+  const dispatch = useDispatch()
+
+  const { error, isLoading, success } = useSelector<RootState>((state) => state.signUp)
+
+  const handleSignUp = () => {
+    if (!companyEmail) {
+      toast.error('Email is required');
+      return;
+    }
+
+    if (!password) {
+      toast.error('Password is required');
+      return;
+    }
+
+    if (!ownerName) {
+      toast.error('Owner name is required');
+      return;
+    }
+
+    if (!companyName) {
+      toast.error('Company name is required');
+      return;
+    }
+
+    dispatch<any>(signUpUser({ firstName: ownerName, lastName: companyName, email: companyEmail, password }));
+  };
+
+  useEffect(() => {
+    if (error) {
+      toast.error(error); // Display backend error message
+    }
+    if (success) {
+      toast.success('Move to the next step 👋');
+    }
+  }, [error, success]);
+  
   return (
     <div className='h-screen'>
       <Link to={'/register'}>
@@ -20,12 +68,12 @@ const SignUp = () => {
             <p className='font-inter font-extralight text-xl text-gray-800'>Welcome! to Eshop</p>
           </div>
           <div className='space-y-5 mb-8'>
-            <CustomInput className='' placeholder='Company name' />
-            <CustomInput className='' placeholder='Last name' />
-            <CustomInput className='' placeholder='Company Email' />
-            <CustomInput placeholder='Password' />
+            <CustomInput className='' placeholder='Owner Name' value={ownerName} onChange={(e)=>setOwnerName(e.target.value)} />
+            <CustomInput className='' placeholder='Company Name' value={companyName} onChange={(e) => setCompanyName(e.target.value)} />
+            <CustomInput className='' placeholder='Company Email' value={companyEmail} onChange={(e) => setCompanyEmail(e.target.value)} />
+            <CustomInput placeholder='Password' value={password} onChange={(e) => setPassword(e.target.value)} />
           </div>
-          <CustomButton to={'/'}>Register</CustomButton>
+          <CustomButton onClick={handleSignUp} to={"/verify-otp"} state={{companyEmail,  password}}>Sign Up</CustomButton>
           <div className='pt-4 text-center'>
             <p className='font-inter font-medium text-gray-800'>Already have an account? <Link to={'/'} className='text-blue-500'>Login</Link></p>
           </div>
